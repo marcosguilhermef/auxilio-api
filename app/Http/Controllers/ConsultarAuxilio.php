@@ -11,8 +11,12 @@ class ConsultarAuxilio extends Controller
     private $HTTP = "https://api.portaldatransparencia.gov.br/api-de-dados/auxilio-emergencial-por-cpf-ou-nis";
 
     public function index(Request $request){
-        
         $page = intval($request->input("pagina"));
+
+        if($request->input("pagina") == null){
+            $page = 1;
+        }
+        
         $data = collect();
         $response = $this->request($request,$page);
         do{
@@ -22,10 +26,10 @@ class ConsultarAuxilio extends Controller
         }
         while(!$response->isEmpty());
 
-        return response()->json($data);
+            return response()->json($data->toArray());
     }
 
-    private function request(Request $request, $pagina = 1){
+    private function request(Request $request, $pagina){
         $response = Http::withHeaders(
             [
                 'chave-api-dados' => env('TOKEN_AUXILIO'),
