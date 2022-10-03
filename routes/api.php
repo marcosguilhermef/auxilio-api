@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:10,1')->post('/auxilio-cpf',[App\Http\Controllers\ConsultarAuxilio::class, 'index']);
 Route::middleware('throttle:10,1')->post('/bolsa-familia',[App\Http\Controllers\BolsaFamilia::class, 'index']);
+Route::middleware('throttle:10,1')->post('/auxilio-brasil',[App\Http\Controllers\AuxilioBrasil::class, 'index']);
