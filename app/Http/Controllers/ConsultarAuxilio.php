@@ -12,6 +12,11 @@ class ConsultarAuxilio extends Controller
 
     public function index(Request $request){
         $page = intval($request->input("pagina"));
+	$cpf = $request->input("cpf");
+
+	if($cpf == null){
+		response()->json([]);
+	}
 
         if($request->input("pagina") == null){
             $page = 1;
