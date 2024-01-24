@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
-use Date;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use DateTime;
 
-class AuxilioBrasil extends Controller
+class Peti extends Controller
 {   
-    private $HTTP = "https://api.portaldatransparencia.gov.br/api-de-dados/auxilio-brasil-sacado-por-nis";
+    private $HTTP = "https://api.portaldatransparencia.gov.br/api-de-dados/peti-por-cpf-ou-nis";
 
     public function index(Request $request){
        
@@ -25,37 +24,32 @@ class AuxilioBrasil extends Controller
 
 
     private function getAuxilio($request){
-        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 
-        $today  = (new DateTime("2023-03"))->format("Ym");
-        $day    = -24;
-        $date   = (new DateTime("2023-03 ".$day." months"))->format("Ym");
+        $pagina = 1;
         $data   = collect();
 
         do{
-            $response = $this->request($request->input("cpf"),$date);
+            $response = $this->request($request->input("codigo"),$pagina);
             $data = $data->merge($response->toArray());
-            $day = $day + 1;
-            $date = (new DateTime("2023-03 ".$day." months"))->format("Ym");
-            $output->writeln("$date");
-        }while($today != $date);
+            $pagina++;
+        }while($pagina <= 10);
 
         return $data->toArray();
     }
 
-    private function request($cpf,$date){
-
+    private function request($cpf,$pagina){
         $response = Http::withHeaders(
             [
                 'chave-api-dados' => env('TOKEN_AUXILIO'),
             ]
         )->get($this->HTTP,
             [
-                'nis' => $cpf,
-                'anoMesCompetencia' => $date
+                'codigo' => $cpf,
+                'pagina' => $pagina
             ]
         );
 
         return $response->collect();
     }
+
 }
