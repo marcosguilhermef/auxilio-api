@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:10,1')
     ->post('/auxilio-cpf',[App\Http\Controllers\ConsultarAuxilio::class, 'index']);
+
+Route::get('/politicas',[App\Http\Controllers\Politicas::class, 'index']);
